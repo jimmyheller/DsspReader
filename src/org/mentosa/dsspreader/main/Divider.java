@@ -39,6 +39,8 @@ public class Divider extends Thread {
             String currentLine;
             String sequence;
             LOGGER.log(Level.INFO, "Started To Divide " + file.getName());
+            DsspGui.txtAreaLog.append("Started To Divide " + file.getName() + "\n");
+            DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
             while ((currentLine = br.readLine()) != null) {
                 String[] temp = currentLine.split("   ");
                 sequence = temp[0].trim();
@@ -70,8 +72,12 @@ public class Divider extends Thread {
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Exception in file: " + file.getName() + " Problem is -> " + e.getMessage());
+            DsspGui.txtAreaLog.append("Exception in file: " + file.getName() + " Problem is -> " + e.getMessage() + "\n");
+            DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
         }
         LOGGER.log(Level.INFO, "Ending Dividing file " + file.getName());
+        DsspGui.txtAreaLog.append("Ending Dividing file " + file.getName()+ "\n");
+        DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
 
 
     }
@@ -115,6 +121,8 @@ public class Divider extends Thread {
             while (tempCounter < counter) {
                 baseReader = new BufferedReader(new FileReader(new File(baseParent + tempCounter + ".txt")));
                 LOGGER.log(Level.INFO, "Starting to read file " + baseParent + tempCounter + ".txt");
+                DsspGui.txtAreaLog.append("Starting to read file " + baseParent + tempCounter + ".txt\n" );
+                DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
                 while ((baseCurrentLine = baseReader.readLine()) != null) {
                     destReader = new BufferedReader(new FileReader(new File(destParent + tempCounter + ".txt")));
                     // LOGGER.log(Level.INFO,"Starting to read file "+ destParent + tempCounter + ".txt" );
@@ -122,18 +130,25 @@ public class Divider extends Thread {
                         String[] baseArray = baseCurrentLine.split("   ");
                         String[] destArray = destCurrentLine.split("   ");
                         if (baseArray[0].equals(destArray[0]) && !(baseArray[1].equals(destArray[1]))) {
-                            LOGGER.log(Level.INFO, "found data....");
-                            result.add(baseArray[0] + "   " + baseArray[1] + "   " + baseArray[2] + "   " + baseArray[3] +
+                            LOGGER.log(Level.INFO, "found data : " + baseArray[0] );
+                            DsspGui.txtAreaLog.append("found data : " + baseArray[0] + "\n" );
+                            DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
+                            result.add(baseArray[0] + "   " + baseArray[1] + "   " + baseArray[2] + "   " + baseArray[3] +"   "+
                                     destArray[0] + "   " + destArray[1] + "   " + destArray[2] + "   " + destArray[3]);
                         }
                     }
                 }
                 tempCounter++;
             }
-            LOGGER.log(Level.INFO, "End of comparing for two files.");
+            LOGGER.log(Level.INFO, "End Of Comparing For Two Files.");
+            DsspGui.txtAreaLog.append("End Of Comparing For Two Files." + "\n" );
+            DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Problem In Finding Result Where baseFile is :" + baseParent + tempCounter + ".txt" +
                     " And Dest File is : " + destParent + tempCounter + ".txt And The Problem Is -> " + e.getMessage());
+            DsspGui.txtAreaLog.append("Problem In Finding Result Where baseFile is :" + baseParent + tempCounter + ".txt" +
+                    " And Dest File is : " + destParent + tempCounter + ".txt And The Problem Is -> " + e.getMessage() + "\n" );
+            DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
         }
         return result;
 
@@ -298,13 +313,17 @@ public class Divider extends Thread {
 
         while (true) {
             LOGGER.log(Level.INFO, "Checking for stopped threads");
+            DsspGui.txtAreaLog.append("Checking for stopped threads\n");
+            DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
             if (!t1.isAlive() && !t2.isAlive() && !t3.isAlive()) {
                 LOGGER.log(Level.INFO, "All files creation is stopped....");
+                DsspGui.txtAreaLog.append("All files creation is stopped....\n");
+                DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
                 break;
             } else {
                 try {
-                    Thread.sleep(5000);
-                    LOGGER.log(Level.INFO, "Sleeping for 30 secs :" + Thread.currentThread().getName());
+                    Thread.sleep(1000);
+                    //LOGGER.log(Level.INFO, "Sleeping for 1 Second :" + Thread.currentThread().getName());
                 } catch (InterruptedException e) {
                     DsspGui.txtAreaLog.append("Exception Thread Management : " + Thread.currentThread().getName() + "\n");
                     DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
@@ -313,7 +332,9 @@ public class Divider extends Thread {
             }
 
         }
-        LOGGER.log(Level.INFO, "starting to read divided files.....");
+        LOGGER.log(Level.INFO, "Starting To Divide Files....");
+        DsspGui.txtAreaLog.append("Starting To Divide Files....\n");
+        DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
 
         Runnable runner1 = new Runnable() {
             @Override
@@ -324,7 +345,7 @@ public class Divider extends Thread {
                 heResult = divider.findGreatesMer(heResult);
 
                 divider.makeDir(heResultFolder);
-                divider.writeData(heResultFolder + "HE.txt", false, "");
+                divider.writeData(heResultFolder + "HE.txt", false, "SEQUENCE       PDBID  START   END   SEQUENCE    PDBID   START    END   ");
                 for (String line : hcResult) {
                     divider.writeData(heResultFolder + "HE.txt", true, line);
                     divider.writeData(heResultFolder + "HE" + line.split("   ")[0].length() + ".txt", true, line);
@@ -341,7 +362,7 @@ public class Divider extends Thread {
                 hcResult = divider.findGreatesMer(hcResult);
 
                 divider.makeDir(hcResultFolder);
-                divider.writeData(hcResultFolder + "HC.txt", false, "");
+                divider.writeData(hcResultFolder + "HC.txt", false, "SEQUENCE       PDBID  START   END   SEQUENCE    PDBID   START    END   ");
                 for (String line : hcResult) {
                     divider.writeData(hcResultFolder + "HC.txt", true, line);
                     divider.writeData(hcResultFolder + "HC" + line.split("   ")[0].length() + ".txt", true, line);
@@ -356,7 +377,7 @@ public class Divider extends Thread {
                 ecResult = divider.comparator(eTempFileAddress, cTempFileAddress, "E", "C");
                 ecResult = divider.findGreatesMer(ecResult);
                 divider.makeDir(ecResultFolder);
-                divider.writeData(ecResultFolder + "EC.txt", false, "");
+                divider.writeData(ecResultFolder + "EC.txt", false, "SEQUENCE       PDBID  START   END   SEQUENCE    PDBID   START    END   ");
                 for (String line : ecResult) {
 
                     divider.writeData(ecResultFolder + "EC" + line.split("   ")[0].length() + ".txt", true, line);
@@ -375,14 +396,18 @@ public class Divider extends Thread {
         comp3.setName("comp3");
 
         while (true) {
-            LOGGER.log(Level.INFO, "Checking for stopped threads");
+            LOGGER.log(Level.INFO, "Checking For Stopped Threads");
+            DsspGui.txtAreaLog.append("Checking For Stopped Threads\n");
+            DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
             if (!comp1.isAlive() && !comp2.isAlive() && !comp3.isAlive()) {
                 LOGGER.log(Level.INFO, "Ended All");
+                DsspGui.txtAreaLog.append("Ended All\n");
+                DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
                 break;
             } else {
                 try {
-                    Thread.sleep(5000);
-                    LOGGER.log(Level.INFO, "Sleeping for 30 secs :" + Thread.currentThread().getName());
+                    Thread.sleep(1000);
+                    //LOGGER.log(Level.INFO, "Sleeping for 1 Second :" + Thread.currentThread().getName());
                 } catch (InterruptedException e) {
                     DsspGui.txtAreaLog.append("Exception Thread Management : " + Thread.currentThread().getName() + "\n");
                     DsspGui.txtAreaLog.update(DsspGui.txtAreaLog.getGraphics());
