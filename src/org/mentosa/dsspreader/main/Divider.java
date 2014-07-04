@@ -12,15 +12,13 @@ import java.util.logging.Logger;
  */
 public class Divider extends Thread {
 
+    public static Logger LOGGER = Logger.getLogger(Runner.class.getName());
     protected static String hTempFileAddress;// = "E:\\Jimmy\\hTempMid";
     protected static String cTempFileAddress;// = "E:\\Jimmy\\cTempMid";
     protected static String eTempFileAddress;// = "E:\\Jimmy\\eTempMid";
     protected static String hcResultFolder;// = "";
     protected static String ecResultFolder;// = "";
     protected static String heResultFolder;// = "";
-
-    public static Logger LOGGER = Logger.getLogger(Runner.class.getName());
-
     private static ArrayList<String> heResult = new ArrayList<>();
     private static ArrayList<String> hcResult = new ArrayList<>();
     private static ArrayList<String> ecResult = new ArrayList<>();
@@ -38,8 +36,8 @@ public class Divider extends Thread {
             int endIndex = 4;
             int start;
 
-            String currentLine = "";
-            String sequence = "";
+            String currentLine;
+            String sequence;
             LOGGER.log(Level.INFO, "Started To Divide " + file.getName());
             while ((currentLine = br.readLine()) != null) {
                 String[] temp = currentLine.split("   ");
@@ -106,12 +104,12 @@ public class Divider extends Thread {
         }
         int tempCounter = 4;
         //-----------------------------------------
-        BufferedReader baseReader = null;
-        BufferedReader destReader = null;
+        BufferedReader baseReader;
+        BufferedReader destReader;
         String baseParent = baseFilesAddres + parameter1;
         String destParent = destFileAddress + parameter2;
-        String baseCurrentLine = "";
-        String destCurrentLine = "";
+        String baseCurrentLine;
+        String destCurrentLine;
         //-----------------------------------------
         try {
             while (tempCounter < counter) {
@@ -123,7 +121,7 @@ public class Divider extends Thread {
                     while ((destCurrentLine = destReader.readLine()) != null) {
                         String[] baseArray = baseCurrentLine.split("   ");
                         String[] destArray = destCurrentLine.split("   ");
-                        if (baseArray[0].equals(destArray[0]) && baseArray[1].equals(destArray[1])) {
+                        if (baseArray[0].equals(destArray[0]) && !(baseArray[1].equals(destArray[1]))) {
                             LOGGER.log(Level.INFO, "found data....");
                             result.add(baseArray[0] + "   " + baseArray[1] + "   " + baseArray[2] + "   " + baseArray[3] +
                                     destArray[0] + "   " + destArray[1] + "   " + destArray[2] + "   " + destArray[3]);
@@ -250,7 +248,7 @@ public class Divider extends Thread {
     }
 
 
-    public static void runner(final File hFile, final File eFile, final File cFile) {
+    public void runner(final File hFile, final File eFile, final File cFile) {
         Thread.currentThread().setName("Main Thread");
         Runnable rnr1 = new Runnable() {
             @Override
@@ -328,8 +326,9 @@ public class Divider extends Thread {
                 divider.makeDir(heResultFolder);
                 divider.writeData(heResultFolder + "HE.txt", false, "");
                 for (String line : hcResult) {
-                    divider.writeData(heResultFolder + "HE.txt", false, line);
+                    divider.writeData(heResultFolder + "HE.txt", true, line);
                     divider.writeData(heResultFolder + "HE" + line.split("   ")[0].length() + ".txt", true, line);
+
                 }
             }
         };
@@ -344,7 +343,7 @@ public class Divider extends Thread {
                 divider.makeDir(hcResultFolder);
                 divider.writeData(hcResultFolder + "HC.txt", false, "");
                 for (String line : hcResult) {
-                    divider.writeData(hcResultFolder + "HC.txt", false, line);
+                    divider.writeData(hcResultFolder + "HC.txt", true, line);
                     divider.writeData(hcResultFolder + "HC" + line.split("   ")[0].length() + ".txt", true, line);
                 }
             }
@@ -359,8 +358,9 @@ public class Divider extends Thread {
                 divider.makeDir(ecResultFolder);
                 divider.writeData(ecResultFolder + "EC.txt", false, "");
                 for (String line : ecResult) {
-                    divider.writeData(ecResultFolder + "EC.txt", false, "");
+
                     divider.writeData(ecResultFolder + "EC" + line.split("   ")[0].length() + ".txt", true, line);
+                    divider.writeData(ecResultFolder + "EC.txt", true, line);
                 }
             }
         };
@@ -394,7 +394,7 @@ public class Divider extends Thread {
 
     }
 
-    /*public static void main(String[] args) {
+   /* public static void main(String[] args) {
         hTempFileAddress = "E:\\Jimmy\\htemp\\";
         eTempFileAddress = "E:\\Jimmy\\etemp\\";
         cTempFileAddress = "E:\\Jimmy\\ctemp\\";
@@ -407,18 +407,20 @@ public class Divider extends Thread {
         final File efile = new File("E:\\Jimmy\\E.txt");
         Divider diver = new Divider();
         diver.makeProbe(hTempFileAddress, hfile);
-        diver.makeProbe(eTempFileAddress, efile);
-        ArrayList<String> j = diver.comparator("E:\\Jimmy\\htemp\\", "E:\\Jimmy\\etemp\\", "H", "E");
-        diver.findGreatesMer(j);
-        diver.makeDir(ecResultFolder);
-        diver.writeData(ecResultFolder + "HC.txt", false, "");
-        for (String sample : j) {
+       // diver.makeProbe(eTempFileAddress, efile);
+        diver.makeProbe(cTempFileAddress, cfile);
+        //ArrayList<String> he = diver.comparator("E:\\Jimmy\\htemp\\", "E:\\Jimmy\\etemp\\", "H", "E");
+        ArrayList<String> hc = diver.comparator("E:\\Jimmy\\htemp\\", "E:\\Jimmy\\ctemp\\", "H", "C");
+        hc = diver.findGreatesMer(hc);
+        diver.makeDir(hcResultFolder);
+        diver.writeData(hcResultFolder + "HC.txt", false, "");
+        for (String sample : hc) {
 
-            diver.writeData(ecResultFolder + "HC.txt", false, sample);
-            diver.writeData(ecResultFolder + "HC" + sample.split("   ")[0].length() + ".txt", false, sample);
+            diver.writeData(hcResultFolder+ "HC.txt", true, sample);
+            diver.writeData(hcResultFolder + "HC" + sample.split("   ")[0].length() + ".txt", true, sample);
         }
-
 */
-  //  }
 
 }
+
+
