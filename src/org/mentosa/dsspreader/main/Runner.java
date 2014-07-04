@@ -103,7 +103,7 @@ public class Runner {
 
 
 
-        //send addressess to another class
+
 
 
   /*      finalResult(hFile, eFile, heFile);
